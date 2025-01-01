@@ -1,1 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LangChain Chat</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+        }
+        textarea {
+            width: 100%;
+            resize: none;
+        }
+        #response {
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 10px;
+            max-height: 300px;
+            overflow-y: auto;
+            background-color: #f9f9f9;
+        }
+        .message {
+            margin: 10px 0;
+        }
+        .user-message {
+            text-align: right;
+            color: #3498db;
+        }
+        .bot-message {
+            text-align: left;
+            color: #2ecc71;
+        }
+        #loading {
+            color: #e74c3c;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Medical Chatbot</h1>
+    <button id="newChatBtn">New Chat</button>
+    <br><br>
+    <textarea id="userInput" rows="4" cols="50" placeholder="Type your question here..."></textarea>
+    <br>
+    <button id="sendInputBtn">Send</button>
+    <p id="loading">Sending your message...</p>
+    <br><br>
+    <div id="response"></div>
+
+    <script>
+        const newChatBtn = document.getElementById("newChatBtn");
+        const sendInputBtn = document.getElementById("sendInputBtn");
+        const userInput = document.getElementById("userInput");
+        const responseDiv = document.getElementById("response");
+        const loadingText = document.getElementById("loading");
+
+        newChatBtn.addEventListener("click", () => {
+            fetch("/new_chat", { method: "POST" })
+                .then(response => response.json())
+                .then(data => {
+                    alert(`New chat started with Thread ID: ${data.thread_id}`);
+                    responseDiv.innerHTML = ""; // Clear previous chat
+                })
+                .catch(err => console.error(err));
+        });
+
+        sendInputBtn.addEventListener("click", () => {
+            const message = userInput.value.trim();
+            if (!message) {
+                alert("Please enter a message before sending.");
+                return;
+            }
+
+            loadingText.style.display = "block";
+
+            fetch("/chat_input", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ message }),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    loadingText.style.display = "none";
+                    addMessageToChat("user-message", message);
+                    addMessageToChat("bot-message", data.response.join("\n"));
+                    userInput.value = ""; // Clear the input
+                })
+                .catch(err => {
+                    loadingText.style.display = "none";
+                    console.error(err);
+                    alert("An error occurred. Please try again.");
+                });
+        });
+
+        function addMessageToChat(type, message) {
+            const messageDiv = document.createElement("div");
+            messageDiv.className = `message ${type}`;
+            messageDiv.innerText = message;
+            responseDiv.appendChild(messageDiv);
+            responseDiv.scrollTop = responseDiv.scrollHeight; // Auto-scroll
+        }
+    </script>
+</body>
+</html>
 
