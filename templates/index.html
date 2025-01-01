@@ -8,9 +8,11 @@
         body {
             font-family: Arial, sans-serif;
             margin: 20px;
+            text-align: center; /* Center all content by default */
         }
         h1 {
             color: #2c3e50;
+            margin-top: 50px;
         }
         textarea {
             width: 100%;
@@ -39,10 +41,32 @@
             color: #e74c3c;
             display: none;
         }
+        .info-section {
+            margin-top: 20px;
+            font-size: 1.1em;
+            color: #333;
+            line-height: 1.6;
+            text-align: left; /* Align information to the left */
+        }
+        .info-section a {
+            color: #007BFF;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .info-section a:hover {
+            text-decoration: underline;
+        }
     </style>
 </head>
 <body>
     <h1>Medical Chatbot</h1>
+    
+    <div class="info-section">
+        <p>The Chatbot is trained using the book obtained in the 3rd edition of <a href="https://staibabussalamsula.ac.id/wp-content/uploads/2024/06/The-Gale-Encyclopedia-of-Medicine-3rd-Edition-staibabussalamsula.ac_.id_.pdf" target="_blank">Gale Encyclopedia of Medicine (3rd Edition)</a>.</p>
+
+        <p>The bot is trained using <a href="https://aws.amazon.com/what-is/retrieval-augmented-generation/" target="_blank">RAG (Retrieval-Augmented Generation)</a>. It utilizes OpenAI LLM and embedding models. Vector embeddings of the book are stored in <a href="https://www.pinecone.io/" target="_blank">Pinecone</a>.</p>
+    </div>
+    
     <button id="newChatBtn">New Chat</button>
     <br><br>
     <textarea id="userInput" rows="4" cols="50" placeholder="Type your question here..."></textarea>
@@ -107,4 +131,3 @@
     </script>
 </body>
 </html>
-
