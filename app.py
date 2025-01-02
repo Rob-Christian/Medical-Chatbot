@@ -76,6 +76,8 @@ def initialize_graph():
     graph_builder.add_edge("generate", END)
     return graph_builder.compile(checkpointer=MemorySaver())
 
+new_thread_id = str(uuid.uuid4())
+config = {"configurable": {"thread_id": new_thread_id}}
 graph = initialize_graph()
 
 @app.route("/")
